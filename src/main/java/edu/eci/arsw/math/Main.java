@@ -15,6 +15,17 @@ public class Main {
 
     public static void main(String a[]) {
         int N = Runtime.getRuntime().availableProcessors();
+
+        Thread resumer = new Thread(() -> {
+            java.util.Scanner scanner = new java.util.Scanner(System.in);
+            while (scanner.hasNextLine()) {
+                scanner.nextLine();
+                PiThread.resumeAll();
+            }
+        });
+        resumer.setDaemon(true);
+        resumer.start();
+
         System.out.println(bytesToHex(PiDigits.getDigits(0, 10, N)));
         System.out.println(bytesToHex(PiDigits.getDigits(1, 100, N)));
         System.out.println(bytesToHex(PiDigits.getDigits(1, 1000000, N)));
