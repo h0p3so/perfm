@@ -47,6 +47,62 @@ public class PiDigits {
         return digits;
     }
 
+    /**
+     * Returns a range of hexadecimal digits of pi, splitting the work among N threads.
+     * The range [start, start + count) is divided into N contiguous chunks, each one
+     * computed by its own {@link PiThread}. This method blocks (using join()) until all
+     * threads finish, and then combines their partial results into a single array.
+     *
+     * @param start The starting location of the range.
+     * @param count The number of digits to return.
+     * @param N The number of threads to split the work among.
+     * @return An array containing the hexadecimal digits.
+     */
+    public static byte[] getDigits(int start, int count, int N) {
+        if (start < 0) {
+            throw new RuntimeException("Invalid Interval");
+        }
+
+        if (count < 0) {
+            throw new RuntimeException("Invalid Interval");
+        }
+
+        if (N <= 0) {
+            throw new RuntimeException("Invalid number of threads");
+        }
+
+        PiThread[] threads = new PiThread[N];
+        int baseCount = count / N;
+        int remainder = count % N;
+        int chunkStart = start;
+
+        for (int i = 0; i < N; i++) {
+            int chunkCount = baseCount + (i < remainder ? 1 : 0);
+            threads[i] = new PiThread(chunkStart, chunkCount);
+            threads[i].start();
+            chunkStart += chunkCount;
+        }
+
+        for (PiThread thread : threads) {
+            try {
+                thread.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException("Interrupted while waiting for PiThread", e);
+            }
+        }
+
+        byte[] digits = new byte[count];
+        int offset = 0;
+        for (PiThread thread : threads) {
+            byte[] partial = thread.getDigits();
+            System.arraycopy(partial, 0, digits, offset, partial.length);
+            offset += partial.length;
+        }
+
+        return digits;
+    }
+
     /// <summary>
     /// Returns the sum of 16^(n - k)/(8 * k + m) from 0 to k.
     /// </summary>
