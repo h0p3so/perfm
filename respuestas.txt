@@ -1,0 +1,21 @@
+RESPUESTAS
+
+1. Diferencias en la salida entre Slackware y OpenBSD
+- uname -s: "Linux" en Slackware, "OpenBSD" en OpenBSD.
+- hostname: OpenBSD muestra el nombre con dominio.
+- date: en Slackware puede salir en espanol, en OpenBSD sale en ingles.
+
+2. Mismo resultado en Slackware y OpenBSD
+- Si, usando tr -d ' ' para quitar los espacios que OpenBSD pone en la salida de wc.
+
+5. Los 10 caracteres de ls -l
+- Caracter 1, tipo: - archivo, d directorio, l enlace, c dispositivo de caracteres,
+  b dispositivo de bloques, p tuberia, s socket.
+- Caracteres 2-4 dueno, 5-7 grupo, 8-10 otros:
+  r lectura, w escritura, x ejecucion, - sin permiso,
+  s setuid/setgid, t sticky bit.
+
+5. Diferencias de ls -l entre Slackware y OpenBSD
+- Slackware puede mostrar un caracter 11 (+ o .), OpenBSD no.
+- La linea "total" usa bloques de 1K en Slackware y de 512 bytes en OpenBSD.
+- La fecha en Slackware puede salir en espanol, en OpenBSD sale en ingles.
